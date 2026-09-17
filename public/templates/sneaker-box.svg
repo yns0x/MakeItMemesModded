@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#d7e4f2"/>
+  <rect x="0" y="440" width="800" height="160" fill="#9fb6c9"/>
+  <rect x="230" y="300" width="340" height="220" fill="#c98a4b"/>
+  <polygon points="230,300 400,240 570,300" fill="#e0a868"/>
+  <rect x="230" y="300" width="340" height="30" fill="#a86a33"/>
+  <text x="400" y="420" font-family="Arial, sans-serif" font-size="46" font-weight="bold" fill="#5c3a1a" text-anchor="middle">SNKRS</text>
+  <ellipse cx="400" cy="470" rx="150" ry="18" fill="#7c8fa1" opacity="0.4"/>
+  <g>
+    <path d="M120 500 q40 -60 140 -40 q60 10 80 40 q-10 30 -80 30 q-90 5 -140 -30 z" fill="#e94f4f"/>
+    <path d="M120 500 q40 -60 140 -40" stroke="#ffffff" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <rect x="200" y="480" width="70" height="14" rx="7" fill="#ffffff"/>
+  </g>
+</svg>

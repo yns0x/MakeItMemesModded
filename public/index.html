@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Make it Meme — Modded</title>
+<link rel="stylesheet" href="/css/style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="toast" class="toast hidden"></div>
+
+<header class="topbar">
+  <div class="brand">🖼️ Make it Meme <span class="badge">Modded</span></div>
+  <div id="roomBadge" class="room-badge hidden">Code : <strong id="roomCodeLabel"></strong></div>
+</header>
+
+<main id="app">
+
+  <!-- ACCUEIL -->
+  <section id="screen-home" class="screen active">
+    <div class="card">
+      <h1>Créer ou rejoindre une partie</h1>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="create">Créer</button>
+        <button class="tab-btn" data-tab="join">Rejoindre</button>
+      </div>
+
+      <div id="tab-create" class="tab-panel active">
+        <label>Ton pseudo
+          <input id="createName" maxlength="20" placeholder="Ex : Léo" />
+        </label>
+
+        <label>Mode de jeu
+          <div class="mode-choice">
+            <button type="button" class="mode-card active" data-mode="classic">
+              <strong>Classique</strong>
+              <span>Templates de mèmes fournis, tu écris juste la légende.</span>
+            </button>
+            <button type="button" class="mode-card" data-mode="upload">
+              <strong>Upload perso</strong>
+              <span>Chaque joueur importe SA propre image et place SON texte dessus.</span>
+            </button>
+          </div>
+        </label>
+
+        <div class="settings-grid">
+          <label>Manches
+            <select id="setRounds">
+              <option value="3">3</option>
+              <option value="5" selected>5</option>
+              <option value="7">7</option>
+              <option value="10">10</option>
+            </select>
+          </label>
+          <label>Temps pour créer (s)
+            <select id="setCaption">
+              <option value="45">45</option>
+              <option value="75" selected>75</option>
+              <option value="120">120</option>
+            </select>
+          </label>
+          <label>Temps de vote (s)
+            <select id="setVote">
+              <option value="20">20</option>
+              <option value="30" selected>30</option>
+              <option value="45">45</option>
+            </select>
+          </label>
+        </div>
+
+        <button id="btnCreate" class="btn primary">Créer la partie</button>
+      </div>
+
+      <div id="tab-join" class="tab-panel">
+        <label>Ton pseudo
+          <input id="joinName" maxlength="20" placeholder="Ex : Léo" />
+        </label>
+        <label>Code de la partie
+          <input id="joinCode" maxlength="6" placeholder="Ex : AB12C" style="text-transform:uppercase" />
+        </label>
+        <button id="btnJoin" class="btn primary">Rejoindre</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOBBY -->
+  <section id="screen-lobby" class="screen">
+    <div class="card">
+      <h2>Salle d'attente</h2>
+      <p class="muted">Partage le code <strong id="lobbyCode"></strong> à tes potes.</p>
+      <p class="muted" id="lobbyModeInfo"></p>
+      <h3>Joueurs</h3>
+      <ul id="lobbyPlayers" class="player-list"></ul>
+      <button id="btnStart" class="btn primary hidden">Lancer la partie</button>
+      <p id="lobbyWait" class="muted">En attente que l'hôte lance la partie…</p>
+    </div>
+  </section>
+
+  <!-- CAPTION / CREATION -->
+  <section id="screen-caption" class="screen">
+    <div class="card wide">
+      <div class="round-header">
+        <h2>Manche <span id="capRound"></span> / <span id="capTotal"></span></h2>
+        <div class="timer" id="capTimer">--</div>
+      </div>
+      <p class="muted" id="capStatus"></p>
+
+      <div id="uploadZone" class="upload-zone hidden">
+        <p>Mode Upload perso : choisis TON image pour cette manche.</p>
+        <input type="file" id="fileInput" accept="image/*" />
+      </div>
+
+      <div id="editorZone" class="editor-zone hidden">
+        <canvas id="memeCanvas" width="700" height="525"></canvas>
+        <div class="editor-controls">
+          <label>Texte du haut
+            <input id="topText" maxlength="60" placeholder="Texte du haut" />
+          </label>
+          <label>Texte du bas
+            <input id="bottomText" maxlength="60" placeholder="Texte du bas" />
+          </label>
+          <button id="btnSubmitMeme" class="btn primary">Valider mon mème</button>
+        </div>
+      </div>
+
+      <p id="capSubmittedInfo" class="muted"></p>
+    </div>
+  </section>
+
+  <!-- VOTE -->
+  <section id="screen-voting" class="screen">
+    <div class="card wide">
+      <div class="round-header">
+        <h2>Vote — Manche <span id="voteRound"></span></h2>
+        <div class="timer" id="voteTimer">--</div>
+      </div>
+      <p class="muted">Clique sur ton mème préféré (pas le tien, il n'apparaît pas ici).</p>
+      <p class="muted" id="voteProgress"></p>
+      <div id="voteGallery" class="gallery"></div>
+    </div>
+  </section>
+
+  <!-- REVEAL -->
+  <section id="screen-reveal" class="screen">
+    <div class="card wide">
+      <h2>Résultats de la manche</h2>
+      <div id="revealEntries" class="gallery reveal"></div>
+      <h3>Classement</h3>
+      <ol id="revealLeaderboard" class="leaderboard"></ol>
+      <p class="muted">Manche suivante dans quelques secondes…</p>
+    </div>
+  </section>
+
+  <!-- GAME OVER -->
+  <section id="screen-gameover" class="screen">
+    <div class="card">
+      <h2>🏆 Classement final</h2>
+      <ol id="finalLeaderboard" class="leaderboard"></ol>
+      <button id="btnPlayAgain" class="btn primary hidden">Rejouer (même salle)</button>
+      <p id="gameoverWait" class="muted">En attente de l'hôte…</p>
+    </div>
+  </section>
+
+</main>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/memeCanvas.js"></script>
+<script src="/js/main.js"></script>
+</body>
+</html>
